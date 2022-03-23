@@ -58,15 +58,15 @@ client.on('interactionCreate', async interaction => {
 		const r1 = new MessageActionRow()
 			.addComponents(
 				new MessageButton()
-					.setCustomId('r11')
+					.setCustomId('r00')
 					.setLabel('↖')
 					.setStyle('PRIMARY'),
 				new MessageButton()
-					.setCustomId('r12')
+					.setCustomId('r01')
 					.setLabel('⬆')
 					.setStyle('PRIMARY'),
 				new MessageButton()
-					.setCustomId('r13')
+					.setCustomId('r02')
 					.setLabel('↗')
 					.setStyle('PRIMARY'),
 
@@ -74,30 +74,30 @@ client.on('interactionCreate', async interaction => {
 		const r2 = new MessageActionRow()
 			.addComponents(
 				new MessageButton()
-					.setCustomId('r21')
+					.setCustomId('r10')
 					.setLabel('⬅')
 					.setStyle('PRIMARY'),
 				new MessageButton()
-					.setCustomId('r22')
+					.setCustomId('r11')
 					.setLabel('⚪')
 					.setStyle('PRIMARY'),
 				new MessageButton()
-					.setCustomId('r23')
+					.setCustomId('r12')
 					.setLabel('➡')
 					.setStyle('PRIMARY'),
 			);
 		const r3 = new MessageActionRow()
 			.addComponents(
 				new MessageButton()
-					.setCustomId('r31')
+					.setCustomId('r20')
 					.setLabel('↙')
 					.setStyle('PRIMARY'),
 				new MessageButton()
-					.setCustomId('r32')
+					.setCustomId('r21')
 					.setLabel('⬇')
 					.setStyle('PRIMARY'),
 				new MessageButton()
-					.setCustomId('r33')
+					.setCustomId('r22')
 					.setLabel('↘')
 					.setStyle('PRIMARY'),
 			);
@@ -110,7 +110,7 @@ client.on('interactionCreate', async interaction => {
 			components: [r1, r2, r3]
 		});
 
-		var num = ['r11', 'r12', 'r13', 'r21', 'r22', 'r23', 'r31', 'r32', 'r33'];
+		var num = ['r00', 'r01', 'r02', 'r10', 'r11', 'r12', 'r20', 'r21', 'r22'];
 		const filter = i => num.includes(i.customId) && (i.user.id === interaction.user.id || i.user.id === user2.id);
 
 		const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
@@ -119,7 +119,6 @@ client.on('interactionCreate', async interaction => {
 		var y;
 		var b = false;
 		var btnTrace = "";
-		var win = false;
 		var mark;
 		var board = [
 			['0', '0', '0'],
@@ -130,41 +129,41 @@ client.on('interactionCreate', async interaction => {
 
 		var current_user = btn.user.id;
 			switch (btn.customId) {
-				case 'r11':
+				case 'r00':
 					x = 15;
 					y = 15;
+					break;
+				case 'r01':
+					x = 180;
+					y = 15;
+					break;
+				case 'r02':
+					x = 340;
+					y = 15;
+					break;
+
+				case 'r10':
+					x = 15;
+					y = 180;
+					break;
+				case 'r11':
+					x = 180;
+					y = 180;
 					break;
 				case 'r12':
-					x = 180;
-					y = 15;
-					break;
-				case 'r13':
 					x = 340;
-					y = 15;
+					y = 180;
 					break;
 
-				case 'r21':
+				case 'r20':
 					x = 15;
-					y = 180;
+					y = 345;
+					break;
+				case 'r21':
+					x = 180;
+					y = 345;
 					break;
 				case 'r22':
-					x = 180;
-					y = 180;
-					break;
-				case 'r23':
-					x = 340;
-					y = 180;
-					break;
-
-				case 'r31':
-					x = 15;
-					y = 345;
-					break;
-				case 'r32':
-					x = 180;
-					y = 345;
-					break;
-				case 'r33':
 					x = 340;
 					y = 345;
 					break;
@@ -183,8 +182,10 @@ client.on('interactionCreate', async interaction => {
 			}
 
 			if (btn.user.id != btnTrace) {
+				
 				num.splice(num.indexOf(btn.customId), 1);
 				btnTrace = btn.user.id;
+
 				context.drawImage(symb, x, y, 150, 150);
 				mImg = new MessageAttachment(canvas.toBuffer(), 'morpion.png');
 				embedMsg.setImage('attachment://morpion.png');
@@ -199,10 +200,13 @@ client.on('interactionCreate', async interaction => {
 				}
 
 				)
+				board[parseInt(btn.customId.charAt(1))][parseInt(btn.customId.charAt(1))] = mark;
+				console.log( btn.customId.charAt(1)+" "+ btn.customId.charAt(2)+`\n`);
+				console.log( parseInt(btn.customId.charAt(1))+" "+ parseInt(btn.customId.charAt(2)));
+	
 			}
 
-			board[btn.customId.charAt(1)].splice(btn.customId.charAt(2),1,mark) ;
-
+		
 			if((board[0][0]==mark && board[0][1]== mark && board[0][2]==mark )|| //for row1 
 
             (board[1][0]==mark && board[1][1]==mark && board[1][2]==mark )||    //for row2
@@ -219,8 +223,16 @@ client.on('interactionCreate', async interaction => {
 
             (board[0][2]==mark && board[1][1]==mark && board[2][0]==mark )) //diagonal 2
 			{ 
-				mImg = new MessageAttachment(canvas.toBuffer(), 'winner.png');
-				embedMsg.setImage('attachment://winnrt.png');
+				console.log("GAGNER");
+				const canvas1 = Canvas.createCanvas(510, 510);
+				const context1 = canvas1.getContext('2d');
+				const background1 = await Canvas.loadImage('./winner.png');
+				context.drawImage(backgroun1, 0, 0, canvas.width, canvas.height);
+		
+				var mImg1 = new MessageAttachment(canvas1.toBuffer(), 'winner.png');
+				embedMsg.setImage('attachment://winner.png');
+				mImg1 = new MessageAttachment(canvas.toBuffer(), 'winner.png');
+				embedMsg.setImage('attachment://winner.png');
 				await interaction.editReply({
 
 					embeds: [embedMsg],
