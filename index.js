@@ -39,8 +39,8 @@ client.on('interactionCreate', async interaction => {
 		var embedMsg = new MessageEmbed()
 			.setThumbnail("https://images.assetsdelivery.com/compings_v2/kahovsky/kahovsky1712/kahovsky171200043.jpg")
 			.setColor('0xFFFFFF')
-			.setTitle('Morpion')
-			.setAuthor({ name: "Joueurs : \n" + `${interaction.user.tag}` + " VS " + `${user2.tag}` })
+			.setTitle('Tic tac toe' )
+			.setAuthor({name: "Players : \n" + `${interaction.user.tag} \n` + " VS \n" + `${user2.tag}`})
 			.setDescription('Utilisez les boutons pour jouer')
 			.addFields(
 				{ name: '\u200B', value: '\u200B' },
@@ -182,7 +182,7 @@ client.on('interactionCreate', async interaction => {
 			}
 
 			if (btn.user.id != btnTrace) {
-				
+
 				num.splice(num.indexOf(btn.customId), 1);
 				btnTrace = btn.user.id;
 
@@ -191,6 +191,10 @@ client.on('interactionCreate', async interaction => {
 				embedMsg.setImage('attachment://morpion.png');
 
 				await btn.deferUpdate();
+
+
+
+
 				await interaction.editReply({
 
 					embeds: [embedMsg],
@@ -200,13 +204,17 @@ client.on('interactionCreate', async interaction => {
 				}
 
 				)
-				board[parseInt(btn.customId.charAt(1))][parseInt(btn.customId.charAt(1))] = mark;
-				console.log( btn.customId.charAt(1)+" "+ btn.customId.charAt(2)+`\n`);
-				console.log( parseInt(btn.customId.charAt(1))+" "+ parseInt(btn.customId.charAt(2)));
+				board[parseInt(btn.customId.charAt(2))][parseInt(btn.customId.charAt(1))] = mark;
+			
 	
 			}
 
-		
+			for(var i = 0; i < board.length; i++) {
+				console.log("\n");
+				for(var z = 0; z < board.length; z++) {
+					process.stdout.write( '['+board[z][i]+']');
+				}
+			  }
 			if((board[0][0]==mark && board[0][1]== mark && board[0][2]==mark )|| //for row1 
 
             (board[1][0]==mark && board[1][1]==mark && board[1][2]==mark )||    //for row2
@@ -223,22 +231,25 @@ client.on('interactionCreate', async interaction => {
 
             (board[0][2]==mark && board[1][1]==mark && board[2][0]==mark )) //diagonal 2
 			{ 
-				console.log("GAGNER");
-				const canvas1 = Canvas.createCanvas(510, 510);
-				const context1 = canvas1.getContext('2d');
-				const background1 = await Canvas.loadImage('./winner.png');
-				context.drawImage(backgroun1, 0, 0, canvas.width, canvas.height);
-		
-				var mImg1 = new MessageAttachment(canvas1.toBuffer(), 'winner.png');
-				embedMsg.setImage('attachment://winner.png');
-				mImg1 = new MessageAttachment(canvas.toBuffer(), 'winner.png');
-				embedMsg.setImage('attachment://winner.png');
-				await interaction.editReply({
+			
+				
 
-					embeds: [embedMsg],
+				
+				var embedMsg1 = new MessageEmbed()
+			.setThumbnail("https://images.assetsdelivery.com/compings_v2/kahovsky/kahovsky1712/kahovsky171200043.jpg")
+			.setColor('0xFFFFFF')
+			.setTitle('Tic tac toe' )
+			.setAuthor({name: "Players : \n" + `${interaction.user.tag} \n` + " VS \n" + `${user2.tag}`})
+			.setDescription('Gagnant : ' + `${btn.user.tag}` )
+
+				embedMsg1.setImage("https://www.pngplay.com/wp-content/uploads/8/Winner-PNG-Free-File-Download.png")
+				// nom du gagner + image modifiée
+
+				await interaction.editReply({
+					embeds: [embedMsg1],
 					fetchReply: true,
-					files: [mImg],
-					components: [r1, r2, r3]
+					files: [],
+					components: []
 				}
 
 				)
